@@ -51,9 +51,7 @@ class MoviesHandlerTest {
 
     @Test
     void postMovie_shouldCreateMovieAndReturn() throws Exception {
-        String body = """
-                {"title": "Inception", "description": "Thriller"}
-                """;
+        String body = "{\"title\": \"Inception\", \"description\": \"Thriller\"}\n";
 
 
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build();
@@ -66,9 +64,7 @@ class MoviesHandlerTest {
 
     @Test
     void getMovieById_shouldReturnMovie_whenExists() throws Exception {
-        String createBody = """
-                {"title": "Interstellar", "description": "Space exploration movie"}
-                """;
+        String createBody = "{\"title\": \"Interstellar\", \"description\": \"Space exploration movie\"}\n";
 
         HttpRequest createRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(createBody)).build();
         HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
@@ -85,9 +81,7 @@ class MoviesHandlerTest {
     @Test
     void deleteMovie_shouldReturn_whenDeleted() throws Exception {
 
-        String createBody = """
-                {"title": "The Matrix", "description": "Sci-fi classic"}
-                """;
+        String createBody = "{\"title\": \"The Matrix\", \"description\": \"Sci-fi classic\"}\n";
 
         HttpRequest createRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(createBody)).build();
 
