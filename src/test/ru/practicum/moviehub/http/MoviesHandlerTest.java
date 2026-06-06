@@ -50,10 +50,10 @@ class MoviesHandlerTest {
     }
 
     @Test
-    void postMovie_shouldCreateMovieAndReturn() throws Exception
-    {
+    void postMovie_shouldCreateMovieAndReturn() throws Exception {
         String body = """
-                {"title": "Inception", "description": "Thriller"}""";
+                {"title": "Inception", "description": "Thriller"}
+                """;
 
 
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build();
@@ -65,8 +65,7 @@ class MoviesHandlerTest {
     }
 
     @Test
-    void getMovieById_shouldReturnMovie_whenExists() throws Exception
-    {
+    void getMovieById_shouldReturnMovie_whenExists() throws Exception {
         String createBody = """
                 {"title": "Interstellar", "description": "Space exploration movie"}
                 """;
@@ -84,8 +83,7 @@ class MoviesHandlerTest {
     }
 
     @Test
-    void deleteMovie_shouldReturn_whenDeleted() throws Exception
-    {
+    void deleteMovie_shouldReturn_whenDeleted() throws Exception {
 
         String createBody = """
                 {"title": "The Matrix", "description": "Sci-fi classic"}
@@ -102,8 +100,7 @@ class MoviesHandlerTest {
     }
 
     @Test
-    void getMovies_whenEmpty_returnsEmptyArray() throws Exception
-    {
+    void getMovies_whenEmpty_returnsEmptyArray() throws Exception {
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).GET().build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
