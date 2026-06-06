@@ -55,13 +55,8 @@ class MoviesHandlerTest {
                 {"title": "Inception", "description": "Thriller"}""";
 
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build();
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(201, response.statusCode());
         assertTrue(response.body().contains("Inception"));
@@ -74,23 +69,14 @@ class MoviesHandlerTest {
                 {"title": "Interstellar", "description": "Space exploration movie"}
                 """;
 
-        HttpRequest createRequest = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(createBody))
-                .build();
-        HttpResponse<String> createResponse = client.send(createRequest,
-                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpRequest createRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(createBody)).build();
+        HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         String responseBody = createResponse.body();
         int id = Integer.parseInt(responseBody.split("\"id\":")[1].split(",")[0].trim());
 
-        HttpRequest getRequest = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies/" + id))
-                .GET()
-                .build();
-        HttpResponse<String> getResponse = client
-                .send(getRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpRequest getRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies/" + id)).GET().build();
+        HttpResponse<String> getResponse = client.send(getRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         assertEquals(200, getResponse.statusCode());
         assertTrue(getResponse.body().contains("Interstellar"));
     }
@@ -102,45 +88,28 @@ class MoviesHandlerTest {
                 {"title": "The Matrix", "description": "Sci-fi classic"}
                 """;
 
-        HttpRequest createRequest = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(createBody))
-                .build();
+        HttpRequest createRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(createBody)).build();
 
-        HttpResponse<String> createResponse = client.send(createRequest,
-                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         int id = Integer.parseInt(createResponse.body().split("\"id\":")[1].split(",")[0].trim());
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies/" + id))
-                .DELETE()
-                .build();
-        HttpResponse<String> deleteResponse = client
-                .send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies/" + id)).DELETE().build();
+        HttpResponse<String> deleteResponse = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         assertEquals(204, deleteResponse.statusCode());
     }
 
     @Test
     void getMovies_whenEmpty_returnsEmptyArray() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE + "/movies"))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).GET().build();
 
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 
         assertEquals(200, response.statusCode());
-        assertEquals("application/json; charset=UTF-8",
-                response.headers().firstValue("Content-Type").orElse(""));
+        assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
 
 
         Gson gson = new Gson();
-        List<Movie> movies = gson.fromJson(
-                response.body(),
-                new ListOfMoviesTypeToken().getType()
-        );
+        List<Movie> movies = gson.fromJson(response.body(), new ListOfMoviesTypeToken().getType());
 
         assertNotNull(movies);
         assertTrue(movies.isEmpty(), "Список фильмов должен быть пустым");
