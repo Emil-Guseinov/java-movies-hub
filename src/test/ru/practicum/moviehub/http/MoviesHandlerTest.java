@@ -19,17 +19,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MoviesHandlerTest {
-    private static final String BASE = "http://localhost:8081";
+    private static final String BASE = "http://localhost:8085";
     private static HttpClient client = HttpClient.newBuilder().build();
     private static MoviesServer server;
     private static MoviesStore store;
+    private static Gson gson;
 
     @BeforeAll
     static void beforeAll() {
         try {
             store = new MoviesStore();
-
-            server = new MoviesServer(store, 8081);
+            gson = new Gson();
+            server = new MoviesServer(store, 8085);
             server.start();
         } catch (Exception e) {
             System.err.println("Не удалось запустить сервер: " + e.getMessage());
@@ -51,7 +52,7 @@ class MoviesHandlerTest {
 
     @Test
     void postMovie_shouldCreateMovieAndReturn() throws Exception {
-        String body = "{\"title\": \"Inception\", \"description\": \"Thriller\"}\n";
+        String body = "{\"title\": \"Inception\", \"description\": \"Thriller\", \"year\": \"1996\"}\n";
 
 
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build();
@@ -64,7 +65,7 @@ class MoviesHandlerTest {
 
     @Test
     void getMovieById_shouldReturnMovie_whenExists() throws Exception {
-        String createBody = "{\"title\": \"Interstellar\", \"description\": \"Space exploration movie\"}\n";
+        String createBody = "{\"title\": \"Interstellar\", \"description\": \"Space exploration movie\", \"year\": \"1996\"}\n";
 
         HttpRequest createRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(createBody)).build();
         HttpResponse<String> createResponse = client.send(createRequest, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
@@ -81,7 +82,7 @@ class MoviesHandlerTest {
     @Test
     void deleteMovie_shouldReturn_whenDeleted() throws Exception {
 
-        String createBody = "{\"title\": \"The Matrix\", \"description\": \"Sci-fi classic\"}\n";
+        String createBody = "{\"title\": \"The Matrix\", \"description\": \"Sci-fi classic\", \"year\": \"1996\"}\n";
 
         HttpRequest createRequest = HttpRequest.newBuilder().uri(URI.create(BASE + "/movies")).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(createBody)).build();
 
@@ -102,8 +103,6 @@ class MoviesHandlerTest {
         assertEquals(200, response.statusCode());
         assertEquals("application/json; charset=UTF-8", response.headers().firstValue("Content-Type").orElse(""));
 
-
-        Gson gson = new Gson();
         List<Movie> movies = gson.fromJson(response.body(), new ListOfMoviesTypeToken().getType());
 
         assertNotNull(movies);

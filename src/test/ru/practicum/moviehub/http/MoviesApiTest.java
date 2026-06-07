@@ -63,5 +63,4 @@ public class MoviesApiTest {
         assertTrue(body.startsWith("[") && body.endsWith("]"),
                 "Ожидается JSON-массив");
     }
-
 }

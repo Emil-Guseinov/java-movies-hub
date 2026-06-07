@@ -23,6 +23,12 @@ public class MoviesStore {
         if (movie.getTitle() == null || movie.getTitle().isBlank()) {
             throw new IllegalArgumentException("Название фильма не может быть пустым");
         }
+        for (Movie mov : movies.values()) {
+            if (mov.getTitle().equalsIgnoreCase(movie.getTitle()) &&
+                    mov.getYear() == movie.getYear()) {
+                throw new IllegalArgumentException("Фильм с таким названием и годом существует!");
+            }
+        }
 
         movie.setId(nextId++);
         movies.put(movie.getId(), movie);
